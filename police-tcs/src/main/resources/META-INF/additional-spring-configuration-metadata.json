@@ -1,0 +1,57 @@
+{"properties": [
+  {
+    "name": "tcp.client.async-connction.enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'tcp.client.async-connction.enabled'"
+  },
+  {
+    "name": "tcp.server.proxy.enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'tcp.server.proxy.enabled'"
+  },
+  {
+    "name": "tcp.server.proxy.bind-port",
+    "type": "java.lang.String",
+    "description": "A description for 'tcp.server.proxy.bind-port'"
+  },
+  {
+    "name": "web.client.enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'web.client.enabled'"
+  },
+  {
+    "name": "spring.mybatis.mapper-locations",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mybatis.mapper-locations'"
+  },
+  {
+    "name": "spring.mybatis.type-aliases-package",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mybatis.type-aliases-package'"
+  },
+  {
+    "name": "mybatis.map-underscore-to-camel-case",
+    "type": "java.lang.String",
+    "description": "A description for 'mybatis.map-underscore-to-camel-case'"
+  },
+  {
+    "name": "tcp.client.async-connction.bypass",
+    "type": "java.lang.String",
+    "description": "A description for 'tcp.client.async-connction.bypass'"
+  },
+  {
+    "name": "tcp.client.async-connction.async-connctions",
+    "type": "java.lang.String",
+    "description": "A description for 'tcp.client.async-connction.async-connctions'"
+  },
+  {
+    "name": "tcp.client.async-connction.connctions",
+    "type": "java.lang.String",
+    "description": "A description for 'tcp.client.async-connction.connctions'"
+  },
+  {
+    "name": "kftc.history.enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'kftc.history.enabled'"
+  }
+]}
