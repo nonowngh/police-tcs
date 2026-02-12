@@ -6,12 +6,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import io.netty.channel.ChannelOption;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.Data;
 import reactor.netty.http.client.HttpClient;
 
@@ -19,7 +16,9 @@ import reactor.netty.http.client.HttpClient;
 @Configuration
 @ConfigurationProperties(prefix = "web.client", ignoreUnknownFields = true)
 public class WebClientConfig {
-	private String picsUrl;
+	
+	private String picsUrl;	
+	private int requestTimeoutSeconds = 30;
 	
 	@Bean("picsWebClient")
 	WebClient esbWebClient() {
@@ -30,7 +29,7 @@ public class WebClientConfig {
 	    
 	    HttpClient httpClient = HttpClient.create()
 	            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000) // 연결 시도 시간 (10초)
-	            .responseTimeout(Duration.ofMinutes(3));           // 전체 응답 대기 시간 (15분으로 상향)
+	            .responseTimeout(Duration.ofSeconds(requestTimeoutSeconds));           // 전체 응답 대기 시간 (15분으로 상향)
 //	            .doOnConnected(conn -> conn
 //	                // 개별 패킷 사이의 읽기/쓰기 제한 시간을 0(무제한) 혹은 매우 길게 설정
 //	                .addHandlerLast(new ReadTimeoutHandler(0)) 
