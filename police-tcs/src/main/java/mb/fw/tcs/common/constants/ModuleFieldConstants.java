@@ -1,7 +1,7 @@
 package mb.fw.tcs.common.constants;
 
-public class ModuleConstants {
-	private ModuleConstants() {
+public class ModuleFieldConstants {
+	private ModuleFieldConstants() {
 	}
 
 	public static final String INTERFACE_SPEC = "interfaceSpec";

@@ -1,4 +1,4 @@
-package mb.fw.tcs.modules.pics.spec;
+package mb.fw.tcs.modules.pics.api.spec;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
-import mb.fw.tcs.common.constants.ModuleConstants;
+import mb.fw.tcs.common.constants.ModuleFieldConstants;
 
 @Slf4j
 @Component
@@ -28,7 +28,7 @@ public class InterfaceSpecLoader {
 	public void init() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		List<InterfaceSpec> allSpecs = mapper.readValue(
-				new ClassPathResource(ModuleConstants.PICS_INTERFACE_SPEC_JSON_FILE).getInputStream(),
+				new ClassPathResource(ModuleFieldConstants.PICS_INTERFACE_SPEC_JSON_FILE).getInputStream(),
 				new TypeReference<List<InterfaceSpec>>() {
 				});
 

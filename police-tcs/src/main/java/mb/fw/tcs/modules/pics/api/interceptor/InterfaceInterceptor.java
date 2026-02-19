@@ -1,4 +1,4 @@
-package mb.fw.tcs.modules.pics.interceptor;
+package mb.fw.tcs.modules.pics.api.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import lombok.extern.slf4j.Slf4j;
-import mb.fw.tcs.common.constants.ModuleConstants;
+import mb.fw.tcs.common.constants.ModuleFieldConstants;
 import mb.fw.tcs.common.utils.PicsTransactionIdGenerator;
-import mb.fw.tcs.modules.pics.spec.InterfaceSpec;
-import mb.fw.tcs.modules.pics.spec.InterfaceSpecLoader;
+import mb.fw.tcs.modules.pics.api.spec.InterfaceSpec;
+import mb.fw.tcs.modules.pics.api.spec.InterfaceSpecLoader;
 
 @Slf4j
 @Component
@@ -35,13 +35,13 @@ public class InterfaceInterceptor implements HandlerInterceptor {
 		String interfaceId = spec.getInterfaceId();
 		String picsTransactionId = PicsTransactionIdGenerator.generate();
 		String transactionId = interfaceId + "_" + picsTransactionId;
-		MDC.put(ModuleConstants.INTERFACE_ID, interfaceId);
-		MDC.put(ModuleConstants.TRANSACTION_ID, transactionId);
-		MDC.put(ModuleConstants.PICS_HEADER_TRANSACTION_ID, picsTransactionId);
+		MDC.put(ModuleFieldConstants.INTERFACE_ID, interfaceId);
+		MDC.put(ModuleFieldConstants.TRANSACTION_ID, transactionId);
+		MDC.put(ModuleFieldConstants.PICS_HEADER_TRANSACTION_ID, picsTransactionId);
 
 		// 3. 시작 시간 기록 (실행 시간 계산용)
-		request.setAttribute(ModuleConstants.START_TIME, System.currentTimeMillis());
-		request.setAttribute(ModuleConstants.INTERFACE_SPEC, spec);
+		request.setAttribute(ModuleFieldConstants.START_TIME, System.currentTimeMillis());
+		request.setAttribute(ModuleFieldConstants.INTERFACE_SPEC, spec);
 
 		// 4. 시작 로깅
 		log.info("[START] [{}] Path: {}", spec.getInterfaceId(), path);
@@ -55,12 +55,12 @@ public class InterfaceInterceptor implements HandlerInterceptor {
 		try {
 			// 1. HandlerExceptionResolver가 에러를 처리했다면 ex는 null일 수 있음
 			// 그래서 request에 담아둔 에러 정보를 확인
-			Exception error = (Exception) request.getAttribute(ModuleConstants.ERROR_EXCEPTION);
-			String errorMsg = (String) request.getAttribute(ModuleConstants.EXCEPTION_MESSAGE);
+			Exception error = (Exception) request.getAttribute(ModuleFieldConstants.ERROR_EXCEPTION);
+			String errorMsg = (String) request.getAttribute(ModuleFieldConstants.EXCEPTION_MESSAGE);
 
-			long startTime = (long) request.getAttribute(ModuleConstants.START_TIME);
+			long startTime = (long) request.getAttribute(ModuleFieldConstants.START_TIME);
 			long duration = System.currentTimeMillis() - startTime;
-			String ifId = MDC.get(ModuleConstants.INTERFACE_ID);
+			String ifId = MDC.get(ModuleFieldConstants.INTERFACE_ID);
 
 			if (error != null || response.getStatus() >= 400) {
 				// [실패 로깅]

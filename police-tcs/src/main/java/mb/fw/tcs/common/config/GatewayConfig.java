@@ -9,13 +9,14 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import mb.fw.tcs.common.constants.ModuleConfigConstants;
 
 @Slf4j
 @Data
 @Configuration
-@ComponentScan(basePackages = "mb.fw.tcs.modules.gateway")
-@ConfigurationProperties(prefix = "module.gateway", ignoreUnknownFields = true)
-@ConditionalOnProperty(prefix = "module.gateway", name = "enabled", havingValue = "true", matchIfMissing = false)
+@ComponentScan(basePackages = ModuleConfigConstants.GATEWAY_PACKAGE)
+@ConfigurationProperties(prefix = ModuleConfigConstants.GATEWAY_PREFIX, ignoreUnknownFields = true)
+@ConditionalOnProperty(prefix = ModuleConfigConstants.GATEWAY_PREFIX, name = "enabled", havingValue = "true", matchIfMissing = false)
 public class GatewayConfig {
 
 	private String authKey = "my-secret-api-key-2026";

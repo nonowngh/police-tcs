@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import mb.fw.tcs.common.constants.ApiPathConstants;
-import mb.fw.tcs.modules.pics.interceptor.InterfaceInterceptor;
+import mb.fw.tcs.modules.pics.api.interceptor.InterfaceInterceptor;
 
 @Configuration
 @ConditionalOnProperty(prefix = "module.pics", name = "enabled", havingValue = "true", matchIfMissing = false)

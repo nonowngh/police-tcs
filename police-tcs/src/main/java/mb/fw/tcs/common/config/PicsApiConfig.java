@@ -9,13 +9,14 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import mb.fw.tcs.common.constants.ModuleConfigConstants;
 
 @Slf4j
 @Data
 @Configuration
-@ComponentScan(basePackages = "mb.fw.tcs.modules.pics")
-@ConfigurationProperties(prefix = "module.pics-api", ignoreUnknownFields = true)
-@ConditionalOnProperty(prefix = "module.pics-api", name = "enabled", havingValue = "true", matchIfMissing = false)
+@ComponentScan(basePackages = ModuleConfigConstants.PICS_API_PACKAGE)
+@ConfigurationProperties(prefix = ModuleConfigConstants.PICS_API_PREFIX, ignoreUnknownFields = true)
+@ConditionalOnProperty(prefix = ModuleConfigConstants.PICS_API_PREFIX, name = "enabled", havingValue = "true", matchIfMissing = false)
 public class PicsApiConfig {
 
 	private String myCertId;
