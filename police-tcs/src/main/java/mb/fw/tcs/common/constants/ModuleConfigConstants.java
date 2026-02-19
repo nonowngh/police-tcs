@@ -11,4 +11,6 @@ public class ModuleConfigConstants {
 	public static final String PICS_API_PREFIX = "module.pics-api";
 
 	public static final String PICS_API_PACKAGE = "mb.fw.tcs.modules.pics.api";
+
+	public static final String PICS_SPEC_PACKAGE = "mb.fw.tcs.modules.pics.spec";
 }

@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import mb.fw.tcs.common.constants.ApiPathConstants;
 import mb.fw.tcs.common.constants.ModuleFieldConstants;
 import mb.fw.tcs.modules.pics.api.service.PicsService;
-import mb.fw.tcs.modules.pics.api.spec.InterfaceSpec;
+import mb.fw.tcs.modules.pics.spec.InterfaceSpec;
 import reactor.core.publisher.Mono;
 
 @RestController

@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mb.fw.tcs.common.config.PicsApiConfig;
 import mb.fw.tcs.common.constants.ModuleFieldConstants;
-import mb.fw.tcs.modules.pics.api.spec.InterfaceSpec;
+import mb.fw.tcs.modules.pics.spec.InterfaceSpec;
 import reactor.core.publisher.Mono;
 
 @Slf4j
