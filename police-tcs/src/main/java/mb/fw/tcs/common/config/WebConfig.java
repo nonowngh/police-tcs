@@ -1,6 +1,7 @@
 package mb.fw.tcs.common.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -9,6 +10,7 @@ import mb.fw.tcs.common.constants.ApiPathConstants;
 import mb.fw.tcs.modules.pics.interceptor.InterfaceInterceptor;
 
 @Configuration
+@ConditionalOnProperty(prefix = "module.pics", name = "enabled", havingValue = "true", matchIfMissing = false)
 public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private InterfaceInterceptor interfaceInterceptor;

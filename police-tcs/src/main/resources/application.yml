@@ -1,27 +1,35 @@
 server:
   port: 33555
 
-gateway:
-  auth:
-    api-key: my-secret-api-key-2025
+module:
+  gateway:
+    enabled: false
+    auth-key: my-secret-api-key-2025
+  pics-api:
+    enabled: true
+    my-cert-id: 123456789
+    use-gpki: false
 
 spring:
   cloud:
-    gateway:
-      routes:
-        - id: pisc-ex # 행공 APIG - 제공기관 한국도로공사
-          uri: http://localhost:33580  # 실제 연계 서버 주소
-          predicates:
-            - Path=/api-gateway/pics/ex/**
-          filters:
-            - RewritePath=/api-gateway/(?<segment>.*), /api/$\{segment}
-#            - AddRequestHeader=X-interface-id, My-Gateway-App
-        - id: other-service
-          uri: http://other-api.internal
-          predicates:
-            - Path=/api/other/**
-          filters:
-            - StripPrefix=2
+      gateway:
+        enabled: false
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: pisc-ex # 행공 APIG - 제공기관 한국도로공사
+#          uri: http://localhost:33580  # 실제 연계 서버 주소
+#          predicates:
+#            - Path=/api-gateway/pics/ex/**
+#          filters:
+#            - RewritePath=/api-gateway/(?<segment>.*), /api/$\{segment}
+##            - AddRequestHeader=X-interface-id, My-Gateway-App
+#        - id: other-service
+#          uri: http://other-api.internal
+#          predicates:
+#            - Path=/api/other/**
+#          filters:
+#            - StripPrefix=2
   main:
     web-application-type: reactive
     allow-bean-definition-overriding: true

@@ -25,6 +25,6 @@ public class PicsCommonController {
 	@PostMapping("/**")
 	public Mono<ResponseEntity<Object>> picsCommonRequest(@RequestBody Object body, ServerHttpRequest request,
 			@RequestAttribute(ModuleConstants.INTERFACE_SPEC) InterfaceSpec spec) {
-		return picsService.callApi(spec, body);
+		return picsService.callApig(spec, body);
 	}
 }

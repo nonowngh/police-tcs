@@ -25,21 +25,25 @@ public class PicsService {
 
 	private final PicsApiConfig picsApiConfig;
 
-	public Mono<ResponseEntity<Object>> callApi(InterfaceSpec spec, Object requestBody) {
+	public Mono<ResponseEntity<Object>> callApig(InterfaceSpec spec, Object requestBody) {
 
-		String picsTransactionId = MDC.get(ModuleConstants.PICS_TRANSACTION_ID);
+		String picsTransactionId = MDC.get(ModuleConstants.PICS_HEADER_TRANSACTION_ID);
 		String apikey = spec.getApiKey();
-		String myCertServerId = picsApiConfig.getMyCertServerId();
+		String myCertServerId = picsApiConfig.getMyCertId();
 		String path = spec.getApiPath();
+		
+		if(picsApiConfig.isUseGpki()) {
+			
+		}
 
 		return picsWebClient.post().uri(uriBuilder -> uriBuilder.path(path).build())
 				.header(HttpHeaders.HOST.toUpperCase(), "")
 				.header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-				.header("api_key", apikey)
-				.header("cert_server_id", myCertServerId)
-				.header(ModuleConstants.PICS_TRANSACTION_ID, picsTransactionId)
-				.header("hpki_yn", "Y")
+				.header(ModuleConstants.PICS_HEADER_API_KEY, apikey)
+				.header(ModuleConstants.PICS_HEADER_MY_CERT_SERVER_ID, myCertServerId)
+				.header(ModuleConstants.PICS_HEADER_TRANSACTION_ID, picsTransactionId)
+				.header(ModuleConstants.PICS_HEADER_GPKI_YN, "Y")
 				.bodyValue(requestBody)
 				.retrieve().toEntity(Object.class)
 				.doOnNext(res -> log.info("[pics-api-success] tx-id: {}, status: {}", picsTransactionId, res.getStatusCode()))

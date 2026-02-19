@@ -13,22 +13,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 @Configuration
-@ComponentScan(basePackages = "mb.fw.tcs.modules.pics")
-@ConfigurationProperties(prefix = "module.pics-api", ignoreUnknownFields = true)
-@ConditionalOnProperty(prefix = "module.pics-api", name = "enabled", havingValue = "true", matchIfMissing = false)
-public class PicsApiConfig {
+@ComponentScan(basePackages = "mb.fw.tcs.modules.gateway")
+@ConfigurationProperties(prefix = "module.gateway", ignoreUnknownFields = true)
+@ConditionalOnProperty(prefix = "module.gateway", name = "enabled", havingValue = "true", matchIfMissing = false)
+public class GatewayConfig {
 
-	private String myCertId;
+	private String authKey = "my-secret-api-key-2026";
 	
-	private boolean useGpki = false;
+	private String authHeaderName = "X-Gateway-Key";
 	
 	@PostConstruct
     public void init() {
         log.info("=================================================");
-        log.info(" ✅ [Module Enabled] PicsApi Module is Active!");
-        log.info(" 🌟 PicsApi My Cert Server Id: {}", myCertId);
-        log.info(" 🌟 PicsApi Use Gpki: {}", useGpki);
+        log.info(" ✅ [Module Enabled] Gateway Module is Active!");
+        log.info(" 🌟 Gateway Auth Header: {}", authHeaderName);
+        log.info(" 🌟 Gateway Auth Key: {}", authKey);
         log.info("=================================================");
     }
-
 }

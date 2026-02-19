@@ -19,5 +19,7 @@ public class InterfaceSpec {
 //	private int apiRequestTimeoutSeconds = 30;
 	// 인터페이스 사용 여부
 	private boolean enabled = true;
+	// api 보유기관 인증서
+	private String providerCertId;
 
 }

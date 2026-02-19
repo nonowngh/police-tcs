@@ -9,9 +9,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import mb.fw.tcs.common.constants.ModuleConstants;
+import mb.fw.tcs.common.utils.PicsTransactionIdGenerator;
 import mb.fw.tcs.modules.pics.spec.InterfaceSpec;
 import mb.fw.tcs.modules.pics.spec.InterfaceSpecLoader;
-import mb.fw.tcs.modules.pics.utils.PicsTransactionIdGenerator;
 
 @Slf4j
 @Component
@@ -37,7 +37,7 @@ public class InterfaceInterceptor implements HandlerInterceptor {
 		String transactionId = interfaceId + "_" + picsTransactionId;
 		MDC.put(ModuleConstants.INTERFACE_ID, interfaceId);
 		MDC.put(ModuleConstants.TRANSACTION_ID, transactionId);
-		MDC.put(ModuleConstants.PICS_TRANSACTION_ID, picsTransactionId);
+		MDC.put(ModuleConstants.PICS_HEADER_TRANSACTION_ID, picsTransactionId);
 
 		// 3. 시작 시간 기록 (실행 시간 계산용)
 		request.setAttribute(ModuleConstants.START_TIME, System.currentTimeMillis());

@@ -11,7 +11,7 @@ import org.springframework.web.server.ServerWebExchange;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mb.fw.tcs.common.config.GatewayAuthConfig;
+import mb.fw.tcs.common.config.GatewayConfig;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -19,19 +19,19 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class GatewayAuthFilter implements GlobalFilter, Ordered {
 	
-	private final GatewayAuthConfig authConfig;	
+	private final GatewayConfig gatewayConfig;	
 	
-    private static final String AUTH_HEADER_NAME = "X-Gateway-Key";
+//    private static final String AUTH_HEADER_NAME = "X-Gateway-Key";
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 		ServerHttpRequest request = exchange.getRequest();
 
         // 1. 헤더에서 API-Key 추출
-        String clientKey = request.getHeaders().getFirst(AUTH_HEADER_NAME);
+        String clientKey = request.getHeaders().getFirst(gatewayConfig.getAuthHeaderName());
 
         // 2. 키 비교 (Constant Time Comparison 권장하나 단순 비교도 성능상 우수)
-        if (clientKey == null || !clientKey.equals(authConfig.getApiKey())) {
+        if (clientKey == null || !clientKey.equals(gatewayConfig.getAuthKey())) {
             log.warn("Unauthorized access attempt! Path: {}, IP: {}", 
                      request.getPath(), request.getRemoteAddress());
 

@@ -15,7 +15,7 @@ import mb.fw.atb.util.MDCLogging;
 
 @Slf4j
 @ImportResource({"classpath:bean.xml"})
-@ComponentScan(basePackages = {"mb.fw.tcs", "mb.fw.adaptor"})
+@ComponentScan(basePackages = {"mb.fw.tcs.common", "mb.fw.adaptor"})
 @EnableScheduling
 @SpringBootApplication
 	public class PoliceTcsApplication {
