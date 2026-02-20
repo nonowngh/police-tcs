@@ -14,7 +14,7 @@ import mb.fw.tcs.common.constants.ModuleConfigConstants;
 @Slf4j
 @Data
 @Configuration
-@ComponentScan(basePackages = { ModuleConfigConstants.PICS_API_PACKAGE, ModuleConfigConstants.PICS_SPEC_PACKAGE })
+@ComponentScan(basePackages = { ModuleConfigConstants.PICS_API_PACKAGE, ModuleConfigConstants.PICS_COMMON_PACKAGE })
 @ConfigurationProperties(prefix = ModuleConfigConstants.PICS_API_PREFIX, ignoreUnknownFields = true)
 @ConditionalOnProperty(prefix = ModuleConfigConstants.PICS_API_PREFIX, name = "enabled", havingValue = "true", matchIfMissing = false)
 public class PicsApiConfig {

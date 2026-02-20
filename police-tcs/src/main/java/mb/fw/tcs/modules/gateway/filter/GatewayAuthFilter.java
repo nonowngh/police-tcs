@@ -18,32 +18,28 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @Slf4j
 public class GatewayAuthFilter implements GlobalFilter, Ordered {
-	
-	private final GatewayConfig gatewayConfig;	
-	
+
+	private final GatewayConfig gatewayConfig;
+
 //    private static final String AUTH_HEADER_NAME = "X-Gateway-Key";
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 		ServerHttpRequest request = exchange.getRequest();
 
-        // 1. 헤더에서 API-Key 추출
-        String clientKey = request.getHeaders().getFirst(gatewayConfig.getAuthHeaderName());
+		String clientKey = request.getHeaders().getFirst(gatewayConfig.getAuthHeaderName());
 
-        // 2. 키 비교 (Constant Time Comparison 권장하나 단순 비교도 성능상 우수)
-        if (clientKey == null || !clientKey.equals(gatewayConfig.getAuthKey())) {
-            log.warn("Unauthorized access attempt! Path: {}, IP: {}", 
-                     request.getPath(), request.getRemoteAddress());
+		if (clientKey == null || !clientKey.equals(gatewayConfig.getAuthKey())) {
+			log.warn("Unauthorized access attempt! Path: {}, IP: {}", request.getPath(), request.getRemoteAddress());
 
-            ServerHttpResponse response = exchange.getResponse();
-            response.setStatusCode(HttpStatus.UNAUTHORIZED); // 401 에러
-            
-            // 응답 바디에 메시지를 넣고 싶다면 여기서 처리 가능
-            return response.setComplete();
-        }
+			ServerHttpResponse response = exchange.getResponse();
+			response.setStatusCode(HttpStatus.UNAUTHORIZED); // 401 에러
 
-        // 3. 인증 성공 시 로그에 남기거나 다음 필터로 전달
-        return chain.filter(exchange);
+			return response.setComplete();
+		}
+
+		// 3. 인증 성공 시 로그에 남기거나 다음 필터로 전달
+		return chain.filter(exchange);
 	}
 
 	@Override

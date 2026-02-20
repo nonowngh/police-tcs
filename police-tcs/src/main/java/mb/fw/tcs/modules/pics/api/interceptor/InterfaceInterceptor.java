@@ -10,8 +10,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import mb.fw.tcs.common.constants.ModuleFieldConstants;
 import mb.fw.tcs.common.utils.PicsTransactionIdGenerator;
-import mb.fw.tcs.modules.pics.spec.InterfaceSpec;
-import mb.fw.tcs.modules.pics.spec.InterfaceSpecLoader;
+import mb.fw.tcs.modules.pics.common.spec.InterfaceSpec;
+import mb.fw.tcs.modules.pics.common.spec.InterfaceSpecLoader;
 
 @Slf4j
 @Component

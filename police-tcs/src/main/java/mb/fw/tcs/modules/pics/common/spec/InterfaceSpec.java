@@ -1,4 +1,4 @@
-package mb.fw.tcs.modules.pics.spec;
+package mb.fw.tcs.modules.pics.common.spec;
 
 import lombok.Data;
 

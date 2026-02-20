@@ -12,8 +12,7 @@ import lombok.RequiredArgsConstructor;
 import mb.fw.tcs.common.constants.ApiPathConstants;
 import mb.fw.tcs.common.constants.ModuleFieldConstants;
 import mb.fw.tcs.modules.pics.api.service.PicsService;
-import mb.fw.tcs.modules.pics.spec.InterfaceSpec;
-import reactor.core.publisher.Mono;
+import mb.fw.tcs.modules.pics.common.spec.InterfaceSpec;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,8 +22,8 @@ public class PicsCommonController {
 	private final PicsService picsService;
 
 	@PostMapping("/**")
-	public Mono<ResponseEntity<Object>> picsCommonRequest(@RequestBody Object body, ServerHttpRequest request,
-			@RequestAttribute(ModuleFieldConstants.INTERFACE_SPEC) InterfaceSpec spec) {
-		return picsService.callApig(spec, body);
+	public ResponseEntity<Object> picsCommonRequest(@RequestBody Object body, ServerHttpRequest request,
+			@RequestAttribute(ModuleFieldConstants.INTERFACE_SPEC) InterfaceSpec spec) throws Exception {
+		return picsService.callApi(spec, body);
 	}
 }
