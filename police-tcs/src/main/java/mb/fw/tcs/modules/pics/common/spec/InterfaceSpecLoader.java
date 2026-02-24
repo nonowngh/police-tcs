@@ -21,7 +21,7 @@ import mb.fw.tcs.common.constants.ModuleFieldConstants;
 @Slf4j
 @Component
 public class InterfaceSpecLoader {
-	// Key: Path, Value: InterfaceSpec 객체 전체
+	// Key: interfaceId, Value: InterfaceSpec 객체 전체
 	private Map<String, InterfaceSpec> specMap = new HashMap<>();
 
 	@PostConstruct
@@ -33,15 +33,15 @@ public class InterfaceSpecLoader {
 				});
 
 		this.specMap = allSpecs.stream().filter(InterfaceSpec::isEnabled)
-				.collect(Collectors.toMap(InterfaceSpec::getInterfaceMappingPath, spec -> spec, // 객체 자신을 Value로 저장
+				.collect(Collectors.toMap(InterfaceSpec::getInterfaceId, spec -> spec, // 객체 자신을 Value로 저장
 						(existing, replacement) -> existing));
 
 		log.info("🔍 [PICS] Interface Specification Loaded");
-		specMap.forEach((path, spec) -> log
-				.info("  ✅ [" + spec.getInterfaceId() + "] Path: " + path + " -> " + spec.getApiPath()));
+		specMap.forEach((interfaceId, spec) -> log
+				.info(" ✅ [" + interfaceId + "] " + spec.getInterfaceDescription() + "-> " + spec.getApiPath()));
 	}
 
-	public Optional<InterfaceSpec> findSpec(String path) {
-		return Optional.ofNullable(specMap.get(path));
+	public Optional<InterfaceSpec> findSpec(String interfaceId) {
+		return Optional.ofNullable(specMap.get(interfaceId));
 	}
 }

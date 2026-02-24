@@ -24,55 +24,42 @@ public class InterfaceInterceptor implements HandlerInterceptor {
 	}
 
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-		String path = request.getRequestURI();
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        String path = request.getRequestURI();
+        
+        String interfaceId = path.contains("/") ? path.substring(path.lastIndexOf("/") + 1) : path;
 
-		// 1. InterfaceSpec 찾기 (없으면 예외 발생 - 이전 단계 로직)
-		InterfaceSpec spec = specLoader.findSpec(path).orElseThrow(() -> new RuntimeException(
-				"Interface Spec Not Found: " + path + " check interface-spec.json('interfaceMappingPath')"));
+        InterfaceSpec spec = specLoader.findSpec(interfaceId)
+            .orElseThrow(() -> new RuntimeException("Interface Spec Not Found: " + interfaceId));
 
-		// 2. Transaction ID 생성 및 MDC 세팅
-		String interfaceId = spec.getInterfaceId();
-		String picsTransactionId = PicsTransactionIdGenerator.generate();
-		String transactionId = interfaceId + "_" + picsTransactionId;
-		MDC.put(ModuleFieldConstants.INTERFACE_ID, interfaceId);
-		MDC.put(ModuleFieldConstants.TRANSACTION_ID, transactionId);
-		MDC.put(ModuleFieldConstants.PICS_HEADER_TRANSACTION_ID, picsTransactionId);
+        String picsTransactionId = PicsTransactionIdGenerator.generate();
+        String transactionId = interfaceId + "_" + picsTransactionId;
+        
+        MDC.put(ModuleFieldConstants.INTERFACE_ID, interfaceId);
+        MDC.put(ModuleFieldConstants.TRANSACTION_ID, transactionId);
+        MDC.put(ModuleFieldConstants.PICS_HEADER_TRANSACTION_ID, picsTransactionId);
 
-		// 3. 시작 시간 기록 (실행 시간 계산용)
-		request.setAttribute(ModuleFieldConstants.START_TIME, System.currentTimeMillis());
-		request.setAttribute(ModuleFieldConstants.INTERFACE_SPEC, spec);
+        request.setAttribute(ModuleFieldConstants.START_TIME, System.currentTimeMillis());
+        request.setAttribute(ModuleFieldConstants.INTERFACE_SPEC, spec);
 
-		// 4. 시작 로깅
-		log.info("[START] [{}] Path: {}", spec.getInterfaceId(), path);
+        log.info("[START] [{}] Path: {}", transactionId, path);
+        return true;
+    }
 
-		return true;
-	}
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        try {
+            long startTime = (long) request.getAttribute(ModuleFieldConstants.START_TIME);
+            long duration = System.currentTimeMillis() - startTime;
+            String transactionId = MDC.get(ModuleFieldConstants.TRANSACTION_ID);
 
-	@Override
-	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
-			Exception ex) {
-		try {
-			// 1. HandlerExceptionResolver가 에러를 처리했다면 ex는 null일 수 있음
-			// 그래서 request에 담아둔 에러 정보를 확인
-			Exception error = (Exception) request.getAttribute(ModuleFieldConstants.ERROR_EXCEPTION);
-			String errorMsg = (String) request.getAttribute(ModuleFieldConstants.EXCEPTION_MESSAGE);
-
-			long startTime = (long) request.getAttribute(ModuleFieldConstants.START_TIME);
-			long duration = System.currentTimeMillis() - startTime;
-			String ifId = MDC.get(ModuleFieldConstants.INTERFACE_ID);
-
-			if (error != null || response.getStatus() >= 400) {
-				// [실패 로깅]
-				log.error("[END] [{}] Result: FAIL | Status: {} | Duration: {}ms | Error: {}", ifId,
-						response.getStatus(), duration, errorMsg != null ? errorMsg : "Unknown Error");
-			} else {
-				// [성공 로깅]
-				log.info("[END] [{}] Result: SUCCESS | Status: {} | Duration: {}ms", ifId, response.getStatus(),
-						duration);
-			}
-		} finally {
-			MDC.clear(); 
-		}
-	}
+            if (response.getStatus() >= 400) {
+                log.error("[END] [{}] Result: FAIL | Status: {} | Duration: {}ms", transactionId, response.getStatus(), duration);
+            } else {
+                log.info("[END] [{}] Result: SUCCESS | Status: {} | Duration: {}ms", transactionId, response.getStatus(), duration);
+            }
+        } finally {
+            MDC.clear(); // 중요: 쓰레드 로컬 메모리 누수 방지
+        }
+    }
 }

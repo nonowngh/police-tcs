@@ -38,7 +38,6 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
 			return response.setComplete();
 		}
 
-		// 3. 인증 성공 시 로그에 남기거나 다음 필터로 전달
 		return chain.filter(exchange);
 	}
 

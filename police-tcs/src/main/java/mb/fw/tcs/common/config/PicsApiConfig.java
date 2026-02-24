@@ -20,6 +20,17 @@ import mb.fw.tcs.common.constants.ModuleConfigConstants;
 public class PicsApiConfig {
 
 	private String myCertId;
+	private String certFilePath;
+	private String envCertFilePathName;
+	private String envPrivateKeyFilePathName;
+	private String envPrivateKeyPasswd;
+	private String sigCertFilePathName;
+	private String sigPrivateKeyFilePathName;
+	private String sigPrivateKeyPasswd;
+	private String gpkiLicPath;
+	private boolean useLdap = true;
+	private String ldapUrl;
+	private String targetCertId = "";
 
 	private boolean useGpki = false;
 
@@ -27,8 +38,19 @@ public class PicsApiConfig {
 	public void init() {
 		log.info("=================================================");
 		log.info(" ✅ [Module Enabled] PicsApi Module is Active!");
-		log.info(" 🌟 PicsApi My Cert Server Id: {}", myCertId);
 		log.info(" 🌟 PicsApi Use Gpki: {}", useGpki);
+		log.info(" 🌟 PicsApi my-cert-server-id: {}", myCertId);
+		log.info(" 🌟 PicsApi cert-file-path: {}", certFilePath);
+		log.info(" 🌟 PicsApi env-cert-file-path-name: {}", envCertFilePathName);
+		log.info(" 🌟 PicsApi env-private-key-file-path-name: {}", envPrivateKeyFilePathName);
+		log.info(" 🌟 PicsApi env-private-key-passwd: {}", envPrivateKeyPasswd);
+		log.info(" 🌟 PicsApi sig-cert-file-path-name: {}", sigCertFilePathName);
+		log.info(" 🌟 PicsApi sig-private-key-file-path-name: {}", sigPrivateKeyFilePathName);
+		log.info(" 🌟 PicsApi sig-private-key-passwd: {}", sigPrivateKeyPasswd);
+		log.info(" 🌟 PicsApi gpki-lic-path: {}", gpkiLicPath);
+		log.info(" 🌟 PicsApi use-ldap: {}", useLdap);
+		log.info(" 🌟 PicsApi ldap-url: {}", ldapUrl);
+		log.info(" 🌟 PicsApi target-cert-id: {}", targetCertId);
 		log.info("=================================================");
 	}
 

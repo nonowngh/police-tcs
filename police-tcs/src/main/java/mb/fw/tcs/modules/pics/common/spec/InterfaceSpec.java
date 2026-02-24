@@ -10,7 +10,7 @@ public class InterfaceSpec {
 	// 인터페이스 명
 	private String interfaceDescription;
 	// path 매핑
-	private String interfaceMappingPath;
+//	private String interfaceMappingPath;
 	// 목적지 서비스 path
 	private String apiPath;
 	// 목적지 서비스 api-key

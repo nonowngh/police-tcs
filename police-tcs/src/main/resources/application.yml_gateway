@@ -1,0 +1,31 @@
+server:
+  port: 33556
+
+module:
+  gateway:
+    enabled: true
+    auth-key: my-secret-api-key-2025
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: pisc-koroad # 행공 APIG - 제공기관 한국도로공사
+          uri: http://localhost:33580  # 실제 연계 서버 주소
+          predicates:
+            - Path=/api-gateway/pics/koroad/**
+          filters:
+            - RewritePath=/api-gateway/(?<segment>.*), /api/$\{segment}
+#            - AddRequestHeader=X-interface-id, My-Gateway-App
+        - id: other-service
+          uri: http://other-api.internal
+          predicates:
+            - Path=/api/other/**
+          filters:
+            - StripPrefix=2
+  main:
+    web-application-type: reactive
+    allow-bean-definition-overriding: true
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
