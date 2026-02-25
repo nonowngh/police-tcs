@@ -2,6 +2,7 @@ package mb.fw.tcs.modules.pics.api.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.MDC;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -27,8 +28,9 @@ public class PicsCommonController {
 	@PostMapping("/**")
 	public ResponseEntity<Object> picsCommonRequest(@RequestBody Object body, HttpServletRequest request,
 			@RequestAttribute(ModuleFieldConstants.INTERFACE_SPEC) InterfaceSpec spec) throws Exception {
-
-		log.info("[{}] ({}) 요청 처리...", spec.getInterfaceId(), spec.getInterfaceDescription());
-		return picsService.callApi(spec, body);
+		String picsTransactionId = MDC.get(ModuleFieldConstants.PICS_HEADER_TRANSACTION_ID);
+		String transactaionId = MDC.get(ModuleFieldConstants.TRANSACTION_ID);
+		log.info("'{} - {}' 요청 처리... tx-id : {}, pics-tx-id : {}", spec.getInterfaceId(), spec.getInterfaceDescription(), transactaionId, picsTransactionId);
+		return picsService.callApi(spec, body, picsTransactionId);
 	}
 }

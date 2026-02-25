@@ -20,13 +20,13 @@ public class ModuleFieldConstants {
 
 	public static final String START_TIME = "startTime";
 
-	public static final String PICS_HEADER_TRANSACTION_ID = "picsTransactionId";
+	public static final String PICS_HEADER_TRANSACTION_ID = "tx_id";
 
 	public static final String PICS_HEADER_API_KEY = "api_key";
 
 	public static final String PICS_HEADER_MY_CERT_SERVER_ID = "cert_server_id";
 
-	public static final String PICS_HEADER_GPKI_YN = "hpki_yn";
+	public static final String PICS_HEADER_GPKI_YN = "gpki_yn";
 
 	public static final String PICS_INTERFACE_SPEC_JSON_FILE = "pics-interface-spec.json";
 

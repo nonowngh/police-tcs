@@ -30,7 +30,7 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
 		String clientKey = request.getHeaders().getFirst(gatewayConfig.getAuthHeaderName());
 
 		if (clientKey == null || !clientKey.equals(gatewayConfig.getAuthKey())) {
-			log.warn("Unauthorized access attempt! Path: {}, IP: {}", request.getPath(), request.getRemoteAddress());
+			log.warn("🔒 Unauthorized access attempt! Path: {}, IP: {}, Client-Key: {}", request.getPath(), request.getRemoteAddress(), clientKey);
 
 			ServerHttpResponse response = exchange.getResponse();
 			response.setStatusCode(HttpStatus.UNAUTHORIZED); // 401 에러

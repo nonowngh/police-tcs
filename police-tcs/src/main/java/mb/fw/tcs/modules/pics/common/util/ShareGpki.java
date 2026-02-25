@@ -23,28 +23,29 @@ public class ShareGpki {
 
 	@PostConstruct
 	public void init() throws Exception {
-		if(!picsApiConfig.isUseGpki()) return;
-		log.info("GPKI 엔진 초기화 시작 (Target: {})", picsApiConfig.getTargetCertId());
-		this.gpki = createGpkiUtil(picsApiConfig.getTargetCertId());
-		log.info("GPKI 엔진 초기화 완료");
+		if (!picsApiConfig.isUseGpki())
+			return;
+		log.info("GPKI 초기화 시작 (Target: {})", picsApiConfig.getGpkiProp().getTargetCertId());
+		this.gpki = createGpkiUtil(picsApiConfig.getGpkiProp().getTargetCertId());
+		log.info("GPKI 초기화 완료");
 	}
 
 	private GpkiUtil createGpkiUtil(String targetId) throws Exception {
 		GpkiUtil g = new GpkiUtil();
 
-		g.setCertFilePath(picsApiConfig.getCertFilePath());
-		g.setGpkiLicPath(picsApiConfig.getGpkiLicPath());
-		g.setEnvCertFilePathName(picsApiConfig.getEnvCertFilePathName());
-		g.setEnvPrivateKeyFilePathName(picsApiConfig.getEnvPrivateKeyFilePathName());
-		g.setEnvPrivateKeyPasswd(picsApiConfig.getEnvPrivateKeyPasswd());
-		g.setIsLDAP(picsApiConfig.isUseLdap());
-		g.setMyServerId(picsApiConfig.getMyCertId());
-		g.setSigCertFilePathName(picsApiConfig.getSigCertFilePathName());
-		g.setSigPrivateKeyFilePathName(picsApiConfig.getSigPrivateKeyFilePathName());
-		g.setSigPrivateKeyPasswd(picsApiConfig.getSigPrivateKeyPasswd());
+		g.setCertFilePath(picsApiConfig.getGpkiProp().getCertFilePath());
+		g.setGpkiLicPath(picsApiConfig.getGpkiProp().getGpkiLicPath());
+		g.setEnvCertFilePathName(picsApiConfig.getGpkiProp().getEnvCertFilePathName());
+		g.setEnvPrivateKeyFilePathName(picsApiConfig.getGpkiProp().getEnvPrivateKeyFilePathName());
+		g.setEnvPrivateKeyPasswd(picsApiConfig.getGpkiProp().getEnvPrivateKeyPasswd());
+		g.setIsLDAP(picsApiConfig.getGpkiProp().isUseLdap());
+		g.setMyServerId(picsApiConfig.getGpkiProp().getMyCertId());
+		g.setSigCertFilePathName(picsApiConfig.getGpkiProp().getSigCertFilePathName());
+		g.setSigPrivateKeyFilePathName(picsApiConfig.getGpkiProp().getSigPrivateKeyFilePathName());
+		g.setSigPrivateKeyPasswd(picsApiConfig.getGpkiProp().getSigPrivateKeyPasswd());
 
 		g.setTargetServerIdList(targetId);
-		g.init(picsApiConfig.getLdapUrl());
+		g.init(picsApiConfig.getGpkiProp().getLdapUrl());
 
 		return g;
 	}

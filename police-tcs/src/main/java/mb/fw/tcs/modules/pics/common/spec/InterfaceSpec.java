@@ -21,5 +21,10 @@ public class InterfaceSpec {
 	private boolean enabled = true;
 	// api 보유기관 인증서
 	private String providerCertId;
+	
+	//송신시스템코드 interface 로깅을 위해
+	private String sendSystemCode;
+	//수신시스템코드 interface 로깅을 위해
+	private String receiveSystemCode;
 
 }

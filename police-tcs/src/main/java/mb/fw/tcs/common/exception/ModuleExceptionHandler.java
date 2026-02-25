@@ -20,7 +20,7 @@ public class ModuleExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Map<String, Object>> handleAll(Exception e, HttpServletRequest request) {
-		log.error("ModuleExceptionHandler 발생 -> {}", e.getMessage());
+		log.error("🚨 ModuleExceptionHandler 발생 : {}", e.getMessage());
 		// 인터셉터에서 사용할 수 있도록 에러 저장
 		request.setAttribute(ModuleFieldConstants.ERROR_EXCEPTION, e);
 		request.setAttribute(ModuleFieldConstants.EXCEPTION_MESSAGE, e.getMessage());

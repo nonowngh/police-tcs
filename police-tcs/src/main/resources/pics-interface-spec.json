@@ -2,17 +2,21 @@
     {
         "interfaceId": "IF_TCS_PICS_API_01",
         "interfaceDescription": "수시미필 증빙파일 목록요청 서비스[AnytmIncmpPrufFileListService]",
-        "apiPath": "http://행공APIG아이피:포트/piss/api/koroad/AnytmIncmpPrufFileListService",
-        "apiKey": "user-service-secret-2026",
+        "apiPath": "/piss/api/koroad/AnytmIncmpPrufFileListService",
+        "apiKey": "picsapikey1",
         "providerCertId": "SVRB552061002",
+        "sendSystemCode": "TCS",
+        "receiveSystemCode": "KOR",
         "enabled": true
     },
     {
         "interfaceId": "IF_TCS_PICS_API_02",
         "interfaceDescription": "수시미필 증빙파일 이미지요청 서비스[AnytmIncmpPrufFileImageService]",
-        "apiPath": "http://행공APIG아이피:포트/piss/api/koroad/AnytmIncmpPrufFileImageService",
-        "apiKey": "user-service-secret-2026",
+        "apiPath": "/piss/api/koroad/AnytmIncmpPrufFileImageService",
+        "apiKey": "picsapikey2",
         "providerCertId": "SVRB552061002",
+        "sendSystemCode": "TCS",
+        "receiveSystemCode": "KOR",
         "enabled": true
     }
 ]

@@ -1,37 +1,34 @@
 server:
-  port: 33555
+  port: 33580
 
 module:
-  gateway:
-    enabled: false
-    auth-key: my-secret-api-key-2025
+  logging:
+    enabled: true
   pics-api:
     enabled: true
-    my-cert-id: 123456789
     use-gpki: false
+    web:
+      apig-url: http://localhost:33590
+      request-timeout-seconds: 60
+    gpki:
+      my-cert-id: 123456789
+      cert-file-path: df
+      env-cert-file-path-name: df
+      env-private-key-file-path-name: df
+      env-private-key-passwd: df
+      sig-cert-file-path-name: df
+      sig-private-key-file-path-name: df
+      sig-private-key-passwd: dd
+      gpki-lic-path: dd
+      use-ldap: false
+      ldap-url: aa
 
 spring:
   cloud:
       gateway:
         enabled: false
-#  cloud:
-#    gateway:
-#      routes:
-#        - id: pisc-ex # 행공 APIG - 제공기관 한국도로공사
-#          uri: http://localhost:33580  # 실제 연계 서버 주소
-#          predicates:
-#            - Path=/api-gateway/pics/ex/**
-#          filters:
-#            - RewritePath=/api-gateway/(?<segment>.*), /api/$\{segment}
-##            - AddRequestHeader=X-interface-id, My-Gateway-App
-#        - id: other-service
-#          uri: http://other-api.internal
-#          predicates:
-#            - Path=/api/other/**
-#          filters:
-#            - StripPrefix=2
   main:
-    web-application-type: reactive
+    web-application-type: servlet
     allow-bean-definition-overriding: true
   autoconfigure:
     exclude:

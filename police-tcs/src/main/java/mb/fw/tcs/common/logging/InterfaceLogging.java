@@ -11,10 +11,10 @@ import mb.fw.atb.util.ATBUtil;
 import mb.fw.tcs.common.constants.InterfaceStatus;
 
 @Slf4j
-public class JmsLogging {
+public class InterfaceLogging {
 	private final JmsTemplate jmsTemplate;
 
-	public JmsLogging(JmsTemplate jmsTemplate) {
+	public InterfaceLogging(JmsTemplate jmsTemplate) {
 		this.jmsTemplate = jmsTemplate;
 	}
 

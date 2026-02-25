@@ -1,22 +1,21 @@
 server:
-  port: 33556
+  port: 28000
 
 module:
   gateway:
     enabled: true
-    auth-key: my-secret-api-key-2025
+    auth-key: tcs-secret-api-key-2026
 
 spring:
   cloud:
     gateway:
       routes:
         - id: pisc-koroad # 행공 APIG - 제공기관 한국도로공사
-          uri: http://localhost:33580  # 실제 연계 서버 주소
+          uri: http://localhost:33580  # 행공 API 어댑터
           predicates:
             - Path=/api-gateway/pics/koroad/**
           filters:
             - RewritePath=/api-gateway/(?<segment>.*), /api/$\{segment}
-#            - AddRequestHeader=X-interface-id, My-Gateway-App
         - id: other-service
           uri: http://other-api.internal
           predicates:
