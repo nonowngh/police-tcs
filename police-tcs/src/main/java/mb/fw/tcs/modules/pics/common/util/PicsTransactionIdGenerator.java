@@ -1,4 +1,4 @@
-package mb.fw.tcs.common.utils;
+package mb.fw.tcs.modules.pics.common.util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

@@ -13,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import mb.fw.tcs.common.constants.InterfaceStatus;
 import mb.fw.tcs.common.constants.ModuleFieldConstants;
 import mb.fw.tcs.common.logging.InterfaceLogging;
-import mb.fw.tcs.common.utils.PicsTransactionIdGenerator;
 import mb.fw.tcs.modules.pics.common.spec.InterfaceSpec;
 import mb.fw.tcs.modules.pics.common.spec.InterfaceSpecLoader;
+import mb.fw.tcs.modules.pics.common.util.PicsTransactionIdGenerator;
 
 @Slf4j
 @Component
