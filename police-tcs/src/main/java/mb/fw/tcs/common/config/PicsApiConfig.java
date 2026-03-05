@@ -50,7 +50,7 @@ public class PicsApiConfig {
 			log.info(" 🌟 PicsApi Gpki gpki-lic-path: {}", gpkiProp.getGpkiLicPath());
 			log.info(" 🌟 PicsApi Gpki use-ldap: {}", gpkiProp.isUseLdap());
 			log.info(" 🌟 PicsApi Gpki ldap-url: {}", gpkiProp.getLdapUrl());
-//			log.info(" 🌟 PicsApi Gpki target-cert-id: {}", gpkiProp.getTargetCertId());
+			log.info(" 🌟 PicsApi Gpki target-cert-ids: {}", gpkiProp.getTargetCertIds());
 		}
 		log.info("=================================================");
 	}

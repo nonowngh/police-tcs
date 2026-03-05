@@ -1,0 +1,35 @@
+server:
+  port: 33580
+
+module:
+  logging:
+    enabled: true
+  pics-api:
+    enabled: true
+    use-gpki: false
+    web:
+      apig-url: http://localhost:33590
+      request-timeout-seconds: 60
+    gpki:
+      my-cert-id: 123456789
+      cert-file-path: df
+      env-cert-file-path-name: df
+      env-private-key-file-path-name: df
+      env-private-key-passwd: df
+      sig-cert-file-path-name: df
+      sig-private-key-file-path-name: df
+      sig-private-key-passwd: dd
+      gpki-lic-path: dd
+      use-ldap: false
+      ldap-url: aa
+
+spring:
+  cloud:
+      gateway:
+        enabled: false
+  main:
+    web-application-type: servlet
+    allow-bean-definition-overriding: true
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration

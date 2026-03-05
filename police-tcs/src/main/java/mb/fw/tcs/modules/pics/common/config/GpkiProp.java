@@ -21,5 +21,5 @@ public class GpkiProp {
 	private String gpkiLicPath;
 	private boolean useLdap = true;
 	private String ldapUrl;
-	private String targetCertId = "";
+	private String targetCertIds = "";
 }

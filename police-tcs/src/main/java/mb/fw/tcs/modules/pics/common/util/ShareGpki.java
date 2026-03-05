@@ -25,12 +25,12 @@ public class ShareGpki {
 	public void init() throws Exception {
 		if (!picsApiConfig.isUseGpki())
 			return;
-		log.info("GPKI 초기화 시작 (Target: {})", picsApiConfig.getGpkiProp().getTargetCertId());
-		this.gpki = createGpkiUtil(picsApiConfig.getGpkiProp().getTargetCertId());
+		log.info("GPKI 초기화 시작 (Target: {})", picsApiConfig.getGpkiProp().getTargetCertIds());
+		this.gpki = createGpkiUtil(picsApiConfig.getGpkiProp().getTargetCertIds());
 		log.info("GPKI 초기화 완료");
 	}
 
-	private GpkiUtil createGpkiUtil(String targetId) throws Exception {
+	private GpkiUtil createGpkiUtil(String targetIds) throws Exception {
 		GpkiUtil g = new GpkiUtil();
 
 		g.setCertFilePath(picsApiConfig.getGpkiProp().getCertFilePath());
@@ -44,7 +44,7 @@ public class ShareGpki {
 		g.setSigPrivateKeyFilePathName(picsApiConfig.getGpkiProp().getSigPrivateKeyFilePathName());
 		g.setSigPrivateKeyPasswd(picsApiConfig.getGpkiProp().getSigPrivateKeyPasswd());
 
-		g.setTargetServerIdList(targetId);
+		g.setTargetServerIdList(targetIds);
 		g.init(picsApiConfig.getGpkiProp().getLdapUrl());
 
 		return g;

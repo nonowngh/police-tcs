@@ -25,8 +25,12 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+		if (!gatewayConfig.isUseAuth()) {
+	        log.debug("🔓 GatewayAuthFilter is disabled. Skipping authentication.");
+	        return chain.filter(exchange);
+	    }
+		
 		ServerHttpRequest request = exchange.getRequest();
-
 		String clientKey = request.getHeaders().getFirst(gatewayConfig.getAuthHeaderName());
 
 		if (clientKey == null || !clientKey.equals(gatewayConfig.getAuthKey())) {

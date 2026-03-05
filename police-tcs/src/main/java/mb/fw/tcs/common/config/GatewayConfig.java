@@ -18,6 +18,8 @@ import mb.fw.tcs.common.constants.ModuleConfigConstants;
 @ConfigurationProperties(prefix = ModuleConfigConstants.GATEWAY_PREFIX, ignoreUnknownFields = true)
 @ConditionalOnProperty(prefix = ModuleConfigConstants.GATEWAY_PREFIX, name = "enabled", havingValue = "true", matchIfMissing = false)
 public class GatewayConfig {
+	
+	private boolean useAuth = true;
 
 	private String authKey = "my-secret-api-key-2026";
 	
