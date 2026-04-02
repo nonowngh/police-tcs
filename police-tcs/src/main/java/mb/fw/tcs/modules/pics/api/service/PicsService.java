@@ -1,5 +1,7 @@
 package mb.fw.tcs.modules.pics.api.service;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,6 +21,8 @@ import mb.fw.tcs.modules.pics.common.spec.InterfaceSpec;
 @Service
 @RequiredArgsConstructor
 public class PicsService {
+
+	private static final String ENCRYPT_TARGET_FIELD = "data";
 
 	@Qualifier("picsWebClient")
 	private final WebClient picsWebClient;
@@ -74,18 +78,46 @@ public class PicsService {
 	private Object encryptRequestBody(Object body, InterfaceSpec spec) throws Exception {
 		if (!picsApiConfig.isUseGpki())
 			return body;
-		return gpkiService.encryptData((body instanceof String) ? (String) body : objectMapper.writeValueAsString(body),
-				spec.getProviderCertId());
+		Map<String, Object> bodyMap;
+		if (body instanceof String) {
+			bodyMap = objectMapper.readValue((String) body, Map.class);
+		} else if (body instanceof Map) {
+			bodyMap = (Map<String, Object>) body;
+		} else {
+			bodyMap = objectMapper.convertValue(body, Map.class);
+		}
+		if (bodyMap.containsKey(ENCRYPT_TARGET_FIELD)) {
+			Object targetData = bodyMap.get(ENCRYPT_TARGET_FIELD);
+			if (targetData != null) {
+				// 내부 데이터가 객체면 문자열로 변환, 문자열이면 그대로 사용
+				String plainText = (targetData instanceof String) ? (String) targetData
+						: objectMapper.writeValueAsString(targetData);
+				String encryptedText = gpkiService.encryptData(plainText, spec.getProviderCertId());
+				bodyMap.put(ENCRYPT_TARGET_FIELD, encryptedText);
+			}
+		}
+		return bodyMap;
 	}
 
 	private ResponseEntity<Object> decryptResponseBody(ResponseEntity<Object> responseEntity, InterfaceSpec spec)
 			throws Exception {
-		if (!picsApiConfig.isUseGpki() || responseEntity.getBody() != null)
+		if (!picsApiConfig.isUseGpki() || responseEntity.getBody() == null) {
 			return responseEntity;
-		String encryptedResBody = responseEntity.getBody().toString();
-		String decryptedJson = gpkiService.decryptData(encryptedResBody, spec.getProviderCertId());
-		return ResponseEntity.status(responseEntity.getStatusCode()).headers(responseEntity.getHeaders())
-				.body(objectMapper.readValue(decryptedJson, Object.class));
+		}
+		Map<String, Object> resMap = objectMapper.convertValue(responseEntity.getBody(), Map.class);
+		Object encryptedVal = resMap.get(ENCRYPT_TARGET_FIELD);
+		if (encryptedVal instanceof String) {
+			String encryptedStr = (String) encryptedVal;
+			String decryptedJson = gpkiService.decryptData(encryptedStr, spec.getProviderCertId());
+			try {
+				Object decryptedObject = objectMapper.readValue(decryptedJson, Object.class);
+				resMap.put(ENCRYPT_TARGET_FIELD, decryptedObject);
+			} catch (Exception e) {
+				// 단순 문자열일 경우 그대로 삽입
+				resMap.put(ENCRYPT_TARGET_FIELD, decryptedJson);
+			}
+		}
+		return ResponseEntity.status(responseEntity.getStatusCode()).headers(responseEntity.getHeaders()).body(resMap);
 	}
 
 }
