@@ -42,7 +42,7 @@ public class PicsService {
 		}
 
 		// call apig
-		ResponseEntity<Object> responseEntity;
+		ResponseEntity<String> responseEntity;
 		try {
 			responseEntity = postWebClientSync(spec, finalBody, picsTransactionId);
 			log.info("🟢 pics-api-call 'success' tx-id: {}, status: {}", picsTransactionId,
@@ -53,26 +53,30 @@ public class PicsService {
 		}
 
 		// gpki decrypt
-		try {
-			responseEntity = decryptResponseBody(responseEntity, spec);
-		} catch (Exception e) {
-			throw new RuntimeException("응답 데이터 복호화 중 오류가 발생했습니다. -> " + e.getMessage(), e);
-		}
+//		try {
+//			responseEntity = decryptResponseBody(responseEntity, spec);
+//		} catch (Exception e) {
+//			throw new RuntimeException("응답 데이터 복호화 중 오류가 발생했습니다. -> " + e.getMessage(), e);
+//		}
 
-		return responseEntity;
+		try {
+            return decryptResponseBody(responseEntity, spec);
+        } catch (Exception e) {
+            throw new RuntimeException("응답 데이터 복호화 중 오류가 발생했습니다. -> " + e.getMessage(), e);
+        }
 	}
 
-	private ResponseEntity<Object> postWebClientSync(InterfaceSpec spec, Object requestBody, String picsTransactionId) {
+	private ResponseEntity<String> postWebClientSync(InterfaceSpec spec, Object requestBody, String picsTransactionId) {
 
 		return picsWebClient.post().uri(uriBuilder -> uriBuilder.path(spec.getApiPath()).build())
 				.header(HttpHeaders.HOST.toUpperCase(), "localhost")
-				.header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+				.header(HttpHeaders.ACCEPT, MediaType.ALL_VALUE)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 				.header(ModuleFieldConstants.PICS_HEADER_API_KEY, spec.getApiKey())
 				.header(ModuleFieldConstants.PICS_HEADER_MY_CERT_SERVER_ID, picsApiConfig.getGpkiProp().getMyCertId())
 				.header(ModuleFieldConstants.PICS_HEADER_TRANSACTION_ID, picsTransactionId)
 				.header(ModuleFieldConstants.PICS_HEADER_GPKI_YN, picsApiConfig.isUseGpki() ? "Y" : "N")
-				.bodyValue(requestBody).retrieve().toEntity(Object.class).block(); // 결과를 받을 때까지 현재 쓰레드를 멈춤(동기화)
+				.bodyValue(requestBody).retrieve().toEntity(String.class).block(); // 결과를 받을 때까지 현재 쓰레드를 멈춤(동기화)
 	}
 
 	private Object encryptRequestBody(Object body, InterfaceSpec spec) throws Exception {
@@ -99,25 +103,53 @@ public class PicsService {
 		return bodyMap;
 	}
 
-	private ResponseEntity<Object> decryptResponseBody(ResponseEntity<Object> responseEntity, InterfaceSpec spec)
-			throws Exception {
-		if (!picsApiConfig.isUseGpki() || responseEntity.getBody() == null) {
-			return responseEntity;
-		}
-		Map<String, Object> resMap = objectMapper.convertValue(responseEntity.getBody(), Map.class);
-		Object encryptedVal = resMap.get(ENCRYPT_TARGET_FIELD);
-		if (encryptedVal instanceof String) {
-			String encryptedStr = (String) encryptedVal;
-			String decryptedJson = gpkiService.decryptData(encryptedStr, spec.getProviderCertId());
-			try {
-				Object decryptedObject = objectMapper.readValue(decryptedJson, Object.class);
-				resMap.put(ENCRYPT_TARGET_FIELD, decryptedObject);
-			} catch (Exception e) {
-				// 단순 문자열일 경우 그대로 삽입
-				resMap.put(ENCRYPT_TARGET_FIELD, decryptedJson);
-			}
-		}
-		return ResponseEntity.status(responseEntity.getStatusCode()).headers(responseEntity.getHeaders()).body(resMap);
-	}
+	private ResponseEntity<Object> decryptResponseBody(ResponseEntity<String> responseEntity, InterfaceSpec spec)
+            throws Exception {
+        
+        String rawBody = responseEntity.getBody();
+        if (rawBody == null || rawBody.isEmpty()) {
+            return ResponseEntity.status(responseEntity.getStatusCode()).headers(responseEntity.getHeaders()).build();
+        }
+
+        String decryptedJson;
+        if (picsApiConfig.isUseGpki()) {
+            // [핵심] 응답 바디 전체를 복호화 대상으로 취급
+            decryptedJson = gpkiService.decryptData(rawBody, spec.getProviderCertId());
+        } else {
+            decryptedJson = rawBody;
+        }
+
+        // 복호화된 JSON(String)을 최종 객체(Object)로 변환
+        Object resultObject = tryParseJson(decryptedJson);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.addAll(responseEntity.getHeaders());
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.remove(HttpHeaders.CONTENT_LENGTH);       // 길이는 Spring이 재계산해야 함
+        headers.remove(HttpHeaders.TRANSFER_ENCODING);     // 청크 인코딩 충돌 방지
+        
+//        return ResponseEntity.status(responseEntity.getStatusCode())
+//                .headers(responseEntity.getHeaders())
+//                .body(resultObject);
+        
+        return ResponseEntity.status(responseEntity.getStatusCode())
+                .headers(headers) // 변경된 헤더 사용
+                .body(resultObject);
+    }
+
+    private Object tryParseJson(String text) {
+        if (text == null) return null;
+        String trimmed = text.trim();
+        // JSON 객체({})나 배열([]) 형태인 경우에만 ObjectMapper 사용
+        if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
+            try {
+                return objectMapper.readValue(text, Object.class);
+            } catch (Exception e) {
+                log.warn("JSON 파싱 실패, 원문 반환: {}", e.getMessage());
+                return text;
+            }
+        }
+        return text; // 일반 평문일 경우 그대로 반환
+    }
 
 }
