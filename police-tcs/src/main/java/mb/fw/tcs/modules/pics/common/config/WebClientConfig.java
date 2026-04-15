@@ -47,7 +47,7 @@ public class WebClientConfig {
 	    
 	    // 1. 대용량 처리를 위한 메모리 제한 확장 (기존 주석 해제 및 적용)
 	    ExchangeStrategies strategies = ExchangeStrategies.builder()
-	            .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(100 * 1024 * 1024)) // 100MB
+	            .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(400 * 1024 * 1024)) // 100MB
 	            .build();
 
 	    // 2. HttpClient 설정 (Timeout 및 커넥션 관리)
