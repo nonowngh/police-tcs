@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -43,12 +42,9 @@ public class TestProviderController {
 	
 	@PostMapping("/koroad/**")
 	public ResponseEntity<String> mockPicsApi() {
-	    // 실제 외부 API가 보내주는 상황을 가정 (암호화된 문자열 혹은 plain JSON)
-	    // 여기서는 테스트를 위해 단순 JSON 문자열을 보냅니다.
 	    String mockData = "{\"result\": \"success\", \"message\": \"이것은 텍스트로 전달된 데이터입니다.\"}";
 
 	    HttpHeaders headers = new HttpHeaders();
-	    // 🔴 문제의 원인이 되었던 헤더를 강제로 설정
 	    headers.setContentType(MediaType.TEXT_PLAIN); 
 	    
 	    headers.setContentLength(mockData.getBytes(StandardCharsets.UTF_8).length);

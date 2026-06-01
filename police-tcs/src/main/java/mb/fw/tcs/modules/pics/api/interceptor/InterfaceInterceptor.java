@@ -87,7 +87,7 @@ public class InterfaceInterceptor implements HandlerInterceptor {
 			}
 
 		} finally {
-			MDC.clear(); // 중요: 쓰레드 로컬 메모리 누수 방지
+			MDC.clear();
 		}
 	}
 }

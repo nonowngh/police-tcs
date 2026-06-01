@@ -32,10 +32,10 @@ public class GatewayLoggingFilter implements GlobalFilter, Ordered {
 		String path = request.getPath().value();
 		String method = request.getMethodValue();
 
-		// 1. 요청 로깅
+		// 요청 로깅
 		log.info("👉 [REQUEST - {}] {} {} | Headers: {}", globalTraceId, method, path, request.getHeaders());
 
-		// 2. 응답 로깅을 위한 Decorator 설정
+		// 응답 로깅을 위한 Decorator 설정
 		ServerHttpResponse originalResponse = exchange.getResponse();
 		DataBufferFactory bufferFactory = originalResponse.bufferFactory();
 

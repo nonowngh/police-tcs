@@ -60,17 +60,16 @@ public class PicsService {
 //		}
 
 		try {
-            return decryptResponseBody(responseEntity, spec);
-        } catch (Exception e) {
-            throw new RuntimeException("응답 데이터 복호화 중 오류가 발생했습니다. -> " + e.getMessage(), e);
-        }
+			return decryptResponseBody(responseEntity, spec);
+		} catch (Exception e) {
+			throw new RuntimeException("응답 데이터 복호화 중 오류가 발생했습니다. -> " + e.getMessage(), e);
+		}
 	}
 
 	private ResponseEntity<String> postWebClientSync(InterfaceSpec spec, Object requestBody, String picsTransactionId) {
 
 		return picsWebClient.post().uri(uriBuilder -> uriBuilder.path(spec.getApiPath()).build())
-				.header(HttpHeaders.HOST.toUpperCase(), "localhost")
-				.header(HttpHeaders.ACCEPT, MediaType.ALL_VALUE)
+				.header(HttpHeaders.HOST.toUpperCase(), "localhost").header(HttpHeaders.ACCEPT, MediaType.ALL_VALUE)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 				.header(ModuleFieldConstants.PICS_HEADER_API_KEY, spec.getApiKey())
 				.header(ModuleFieldConstants.PICS_HEADER_MY_CERT_SERVER_ID, picsApiConfig.getGpkiProp().getMyCertId())
@@ -104,52 +103,49 @@ public class PicsService {
 	}
 
 	private ResponseEntity<Object> decryptResponseBody(ResponseEntity<String> responseEntity, InterfaceSpec spec)
-            throws Exception {
-        
-        String rawBody = responseEntity.getBody();
-        if (rawBody == null || rawBody.isEmpty()) {
-            return ResponseEntity.status(responseEntity.getStatusCode()).headers(responseEntity.getHeaders()).build();
-        }
+			throws Exception {
 
-        String decryptedJson;
-        if (picsApiConfig.isUseGpki()) {
-            // [핵심] 응답 바디 전체를 복호화 대상으로 취급
-            decryptedJson = gpkiService.decryptData(rawBody, spec.getProviderCertId());
-        } else {
-            decryptedJson = rawBody;
-        }
+		String rawBody = responseEntity.getBody();
+		if (rawBody == null || rawBody.isEmpty()) {
+			return ResponseEntity.status(responseEntity.getStatusCode()).headers(responseEntity.getHeaders()).build();
+		}
 
-        // 복호화된 JSON(String)을 최종 객체(Object)로 변환
-        Object resultObject = tryParseJson(decryptedJson);
+		String decryptedJson;
+		if (picsApiConfig.isUseGpki()) {
+			decryptedJson = gpkiService.decryptData(rawBody, spec.getProviderCertId());
+		} else {
+			decryptedJson = rawBody;
+		}
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.addAll(responseEntity.getHeaders());
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.remove(HttpHeaders.CONTENT_LENGTH);       // 길이는 Spring이 재계산해야 함
-        headers.remove(HttpHeaders.TRANSFER_ENCODING);     // 청크 인코딩 충돌 방지
-        
+		Object resultObject = tryParseJson(decryptedJson);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.addAll(responseEntity.getHeaders());
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.remove(HttpHeaders.CONTENT_LENGTH);
+		headers.remove(HttpHeaders.TRANSFER_ENCODING);
+
 //        return ResponseEntity.status(responseEntity.getStatusCode())
 //                .headers(responseEntity.getHeaders())
 //                .body(resultObject);
-        
-        return ResponseEntity.status(responseEntity.getStatusCode())
-                .headers(headers) // 변경된 헤더 사용
-                .body(resultObject);
-    }
 
-    private Object tryParseJson(String text) {
-        if (text == null) return null;
-        String trimmed = text.trim();
-        // JSON 객체({})나 배열([]) 형태인 경우에만 ObjectMapper 사용
-        if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
-            try {
-                return objectMapper.readValue(text, Object.class);
-            } catch (Exception e) {
-                log.warn("JSON 파싱 실패, 원문 반환: {}", e.getMessage());
-                return text;
-            }
-        }
-        return text; // 일반 평문일 경우 그대로 반환
-    }
+		return ResponseEntity.status(responseEntity.getStatusCode()).headers(headers).body(resultObject);
+	}
+
+	private Object tryParseJson(String text) {
+		if (text == null)
+			return null;
+		String trimmed = text.trim();
+		// JSON 객체({})나 배열([]) 형태인 경우에만 ObjectMapper 사용
+		if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
+			try {
+				return objectMapper.readValue(text, Object.class);
+			} catch (Exception e) {
+				log.warn("JSON 파싱 실패, 원문 반환: {}", e.getMessage());
+				return text;
+			}
+		}
+		return text;
+	}
 
 }
